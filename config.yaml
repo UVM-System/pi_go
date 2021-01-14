@@ -3,17 +3,15 @@ caps:
   -
     videoid: 0
     prefix: "[1]left"
- # -
- # videoid: 2
- #  prefix: "[1]right"
+ -
+    videoid: 2
+    prefix: "[1]right"
 
 port: "/dev/ttyACM0"
 #port: "/dev/ttyUSB0"
 baudrate: 9600
-detecturl: "http://192.168.1.107:8000/photo"
+detecturl: "http://192.168.1.105:8000/photo"
 #detecturl: "http://127.0.0.1:8000/photo"
-tokenurl: "http://192.168.1.107:8000/token"
-#tokenurl: "http://127.0.0.1:8000/token"
 machineid: "demo"
 password: "123456"
 doorpin: 16
