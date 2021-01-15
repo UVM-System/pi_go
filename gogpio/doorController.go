@@ -36,6 +36,7 @@ func OpenDoor(delayTime int)  {
 	mutex.Lock()
 	doorPin.Low()
 	mutex.Unlock()
+	go Pi2postImages("start")
 	time.Sleep(time.Second * time.Duration(delayTime))
 	mutex.Lock()
 	doorPin.High()
@@ -49,7 +50,7 @@ func Pi2postImages(order string)  {
 		pi2StartPin.Low()
 		mutex.Unlock()
 		// 每次停止 0.1 s
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 2000)
 		mutex.Lock()
 		pi2StartPin.High()
 		mutex.Unlock()

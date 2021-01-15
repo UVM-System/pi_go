@@ -80,7 +80,7 @@ func ObjectOutCallBack() {
 
 // 门被打开的回调函数
 func DoorOpenedCallBack() {
-	go gogpio.Pi2postImages("start")
+	//go gogpio.Pi2postImages("start")
 	PostAllImage("start")
 }
 

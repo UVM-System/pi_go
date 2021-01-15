@@ -14,6 +14,7 @@ var (
 )
 
 func init()  {
+	fmt.Println("init camera")
 	once.Do(InitAndStartCap)
 }
 func InitAndStartCap()  {
@@ -60,12 +61,8 @@ func (cap *VideoCap) GetJpegImageBytes() (buf []byte, err error) {
 func (cap *VideoCap) StartCap()  {
 	cam_handler,err:=gocv.OpenVideoCapture(cap.videoId)
 	fmt.Println("videoId:\t", cap.videoId)
-	log.Print(cam_handler.Get(gocv.VideoCaptureFrameHeight))
-	log.Print(cam_handler.Get(gocv.VideoCaptureFrameWidth))
 	cam_handler.Set(gocv.VideoCaptureFrameHeight,1080)
 	cam_handler.Set(gocv.VideoCaptureFrameWidth,1920)
-	log.Print(cam_handler.Get(gocv.VideoCaptureFrameHeight))
-	log.Print(cam_handler.Get(gocv.VideoCaptureFrameWidth))
 
 	if err!=nil{
 		panic(err.Error())
