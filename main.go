@@ -41,7 +41,7 @@ func main() {
 		fmt.Println("|   2. Make all cap take pictures and upload --end    |")
 		fmt.Println("|   3. Test serial                                    |")
 		fmt.Println("|   4. Open the door                                  |")
-		fmt.Println("|   5. print the gpio                                 |")
+		fmt.Println("|   5. test gpio                                      |")
 		fmt.Println("|   0. Exit                                           |")
 		fmt.Println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		fmt.Scanln(&order)
@@ -58,7 +58,7 @@ func main() {
 			gogpio.OpenDoor(3)
 			Observer.DoorOpenedCallBack()
 		case 5:
-			fmt.Println(gogpio.GetPi2Pin())
+			testGPIO()
 		case 0:
 			os.Exit(0)
 		default:
