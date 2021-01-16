@@ -27,7 +27,7 @@ func postImage() {
 	Observer.PostAllImage("start")
 }
 
-func main1() {
+func main() {
 	// 等待 5s 等所有摄像头都打开并开始拍照
 	time.Sleep(10 * time.Second)
 	// 每次开启时，都需要拍一个冰箱的初始状态，记录初始时拥有多少商品

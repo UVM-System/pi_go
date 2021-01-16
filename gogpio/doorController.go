@@ -50,9 +50,3 @@ func GetDoorPinState() uint8 {
 	defer mutex.Unlock()
 	return uint8(doorPin.Read())
 }
-
-func GetPi2Pin() (uint8, uint8) {
-	mutex.Lock()
-	defer mutex.Unlock()
-	return uint8(pi2StartPin.Read()), uint8(pi2EndPin.Read())
-}

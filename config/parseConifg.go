@@ -19,17 +19,15 @@ type capConfig struct {
 }
 
 type conf struct {
-	VideoId     int         `yaml:"videoid"`
-	SerialPort  string      `yaml:"port"`
-	Baudrate    int         `yaml:"baudrate"`
-	DetectUrl   string      `yaml:"detecturl"`
-	Pi2Url      string      `yaml:"pi2url"`
-	CapConfigs  []capConfig `yaml:"caps"`
-	MachineId   string      `yaml:"machineid"`
-	Password    string      `yaml:"password"`
-	DoorPin     int         `yaml:"doorpin"`
-	Pi2StartPin int         `yaml:"pi2startpin"`
-	Pi2EndPin   int         `yaml:"pi2endpin"`
+	VideoId    int         `yaml:"videoid"`
+	SerialPort string      `yaml:"port"`
+	Baudrate   int         `yaml:"baudrate"`
+	DetectUrl  string      `yaml:"detecturl"`
+	Pi2Url     string      `yaml:"pi2url"`
+	CapConfigs []capConfig `yaml:"caps"`
+	MachineId  string      `yaml:"machineid"`
+	Password   string      `yaml:"password"`
+	DoorPin    int         `yaml:"doorpin"`
 }
 
 func (c *conf) getConf() {

@@ -2,42 +2,43 @@ package camutils
 
 import (
 	"fmt"
-	"gocv.io/x/gocv"
 	"log"
 	"pi_go/config"
 	"sync"
+
+	"gocv.io/x/gocv"
 )
 
 var (
 	VideoHandlers []VideoCap
-	once sync.Once
+	once          sync.Once
 )
 
-func init()  {
+func init() {
 	fmt.Println("init camera")
 	once.Do(InitAndStartCap)
 }
-func InitAndStartCap()  {
-	VideoHandlers = make([]VideoCap,0)
-	for i:=0;i<len(config.Config.CapConfigs);i++{
+func InitAndStartCap() {
+	VideoHandlers = make([]VideoCap, 0)
+	for i := 0; i < len(config.Config.CapConfigs); i++ {
 		videoHandler := VideoCap{
-			videoId:config.Config.CapConfigs[i].VideoId,
-			img:gocv.NewMat(),
-			mutex:sync.Mutex{},
-			Prefix:config.Config.CapConfigs[i].Prefix,
+			videoId: config.Config.CapConfigs[i].VideoId,
+			img:     gocv.NewMat(),
+			mutex:   sync.Mutex{},
+			Prefix:  config.Config.CapConfigs[i].Prefix,
 		}
 		go videoHandler.StartCap()
 		// ToDo 加入VideoHandler 前， 存储的 img 不能为空图像
-		VideoHandlers = append(VideoHandlers,videoHandler)
+		VideoHandlers = append(VideoHandlers, videoHandler)
 	}
 
 }
 
 type VideoCap struct {
 	videoId int
-	img gocv.Mat
-	mutex sync.Mutex
-	Prefix string
+	img     gocv.Mat
+	mutex   sync.Mutex
+	Prefix  string
 }
 
 func (cap *VideoCap) GetJpegImageBytes() (buf []byte, err error) {
@@ -49,32 +50,30 @@ func (cap *VideoCap) GetJpegImageBytes() (buf []byte, err error) {
 	}
 	gocv.IMWrite("404.jpg", cap.img)
 
-	imageBytes,err := gocv.IMEncode(".jpg",cap.img)
-	if err!=nil{
-		log.Print("cap  "+string(cap.videoId)+" error")
+	imageBytes, err := gocv.IMEncode(".jpg", cap.img)
+	if err != nil {
+		log.Print("cap  " + string(cap.videoId) + " error")
 		log.Fatal(err.Error())
 	}
 	cap.mutex.Unlock()
-	return imageBytes,err
+	return imageBytes, err
 }
 
-func (cap *VideoCap) StartCap()  {
-	cam_handler,err:=gocv.OpenVideoCapture(cap.videoId)
-	fmt.Println("videoId:\t", cap.videoId)
-	cam_handler.Set(gocv.VideoCaptureFrameHeight,1080)
-	cam_handler.Set(gocv.VideoCaptureFrameWidth,1920)
-
-	if err!=nil{
+func (cap *VideoCap) StartCap() {
+	cam_handler, err := gocv.OpenVideoCapture(cap.videoId)
+	if err != nil {
 		panic(err.Error())
 	}
-	for{
+	defer cam_handler.Close()
+	fmt.Println("videoId:\t", cap.videoId)
+	cam_handler.Set(gocv.VideoCaptureFrameHeight, 1080)
+	cam_handler.Set(gocv.VideoCaptureFrameWidth, 1920)
+	for {
 		cap.mutex.Lock()
 		cam_handler.Read(&cap.img)
 		cap.mutex.Unlock()
 	}
-	defer cam_handler.Close()
 }
-
 
 /*
 func StartCap(img *gocv.Mat,video_id int,mutex sync.Mutex)  {
@@ -89,4 +88,4 @@ func StartCap(img *gocv.Mat,video_id int,mutex sync.Mutex)  {
 	}
 	defer cam_handler.Close()
 }
- */
+*/

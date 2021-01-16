@@ -10,11 +10,9 @@ caps:
 port: "/dev/ttyACM0"
 #port: "/dev/ttyUSB0"
 baudrate: 9600
-detecturl: "http://192.168.1.101:8000/photo"
+detecturl: "http://192.168.1.107:8000/photo"
 #detecturl: "http://127.0.0.1:8000/photo"
-pi2url: "http://192.168.1.107:8000/photo"
+pi2url: "http://192.168.1.103:8000/photo"
 machineid: "demo"
 password: "123456"
 doorpin: 16
-pi2startpin: 20
-pi2endpin: 21
