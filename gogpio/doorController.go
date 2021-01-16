@@ -9,10 +9,8 @@ import (
 )
 
 var (
-	doorPin     rpio.Pin
-	pi2StartPin rpio.Pin
-	pi2EndPin   rpio.Pin
-	mutex       sync.Mutex
+	doorPin rpio.Pin
+	mutex   sync.Mutex
 )
 
 // 初始化
@@ -21,16 +19,10 @@ func init() {
 		panic(err.Error())
 	}
 	doorPin = rpio.Pin(config.Config.DoorPin)
-	pi2StartPin = rpio.Pin(config.Config.Pi2StartPin)
-	pi2EndPin = rpio.Pin(config.Config.Pi2EndPin)
 	mutex.Lock()
 	doorPin.High()
-	pi2StartPin.High()
-	pi2EndPin.High()
 	mutex.Unlock()
 	doorPin.Output()
-	pi2StartPin.Output()
-	pi2EndPin.Output()
 }
 
 // 开门，等待 delayTime
