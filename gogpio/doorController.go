@@ -1,18 +1,20 @@
 package gogpio
 
 import (
-	"github.com/stianeikeland/go-rpio"
 	"pi_go/config"
 	"sync"
 	"time"
+
+	"github.com/stianeikeland/go-rpio"
 )
 
 var (
-	doorPin rpio.Pin
+	doorPin     rpio.Pin
 	pi2StartPin rpio.Pin
-	pi2EndPin rpio.Pin
-	mutex sync.Mutex
+	pi2EndPin   rpio.Pin
+	mutex       sync.Mutex
 )
+
 // 初始化
 func init() {
 	if err := rpio.Open(); err != nil {
@@ -32,38 +34,14 @@ func init() {
 }
 
 // 开门，等待 delayTime
-func OpenDoor(delayTime int)  {
+func OpenDoor(delayTime int) {
 	mutex.Lock()
 	doorPin.Low()
 	mutex.Unlock()
-	go Pi2postImages("start")
 	time.Sleep(time.Second * time.Duration(delayTime))
 	mutex.Lock()
 	doorPin.High()
 	mutex.Unlock()
-}
-
-// 让第二个树莓派发送图片
-func Pi2postImages(order string)  {
-	if order == "start" {
-		mutex.Lock()
-		pi2StartPin.Low()
-		mutex.Unlock()
-		// 每次停止 0.1 s
-		time.Sleep(time.Millisecond * 2000)
-		mutex.Lock()
-		pi2StartPin.High()
-		mutex.Unlock()
-	} else if order == "end" {
-		mutex.Lock()
-		pi2EndPin.Low()
-		mutex.Unlock()
-		// 每次停止 0.1 s
-		time.Sleep(time.Millisecond * 100)
-		mutex.Lock()
-		pi2EndPin.High()
-		mutex.Unlock()
-	}
 }
 
 // 获取门控串口状态

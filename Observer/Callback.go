@@ -1,12 +1,13 @@
 package Observer
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"pi_go/camutils"
 	"pi_go/config"
-	"pi_go/gogpio"
 	requestutils "pi_go/requestUtils"
 	"time"
 )
@@ -73,18 +74,32 @@ func createFormdata(information map[string]string, videohandler camutils.VideoCa
 // 物体出去的回调函数
 func ObjectOutCallBack() {
 	//TODO:上传多张图片成功,返回结果怎么处理,待定
-	go gogpio.Pi2postImages("end")
-	PostAllImage("end")
+	go PostAllImage("end")
 	//TODO:如果状态成功,则不用重发,如果失败,则重发
 }
 
 // 门被打开的回调函数
 func DoorOpenedCallBack() {
-	//go gogpio.Pi2postImages("start")
+	go Pi2Post("start")
 	PostAllImage("start")
 }
 
 func getTimestr() string {
 	timeStr := time.Now().Format("2006-01-02,15:04:05") //当前时间的字符串，2006-01-02 15:04:05(06年1月2号下午3点4分5秒，06 12345 不重复)，固定写法
 	return timeStr
+}
+
+func Pi2Post(state string) {
+	resp, err := http.PostForm(config.Config.Pi2Url, url.Values{"state": {state}})
+	if err != nil {
+		fmt.Println("Post Pi2 error: ", err.Error())
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Post Pi2 Images error: ", err.Error())
+		panic(err)
+	}
+	fmt.Println(string(body))
 }

@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/stianeikeland/go-rpio"
-	"github.com/tarm/serial"
 	"log"
 	"os"
 	"pi_go/Observer"
@@ -12,28 +10,31 @@ import (
 	"pi_go/serialHandler"
 	"sync"
 	"time"
+
+	"github.com/stianeikeland/go-rpio"
+	"github.com/tarm/serial"
 )
 
 var (
 	inputcode string
 )
 
-func doorEven()  {
+func doorEven() {
 	fmt.Printf("door closed!")
 }
 
-func postImage()  {
+func postImage() {
 	Observer.PostAllImage("start")
 }
 
-func main()  {
+func main1() {
 	// 等待 5s 等所有摄像头都打开并开始拍照
 	time.Sleep(10 * time.Second)
 	// 每次开启时，都需要拍一个冰箱的初始状态，记录初始时拥有多少商品
 	//postImage()
 	// 开始检测串口信息
 	go serialandCapPost()
-	for order := 0; ; order = 0{
+	for order := 0; ; order = 0 {
 		fmt.Println("Please input the order: ")
 		fmt.Println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		fmt.Println("|   1. Make all cap take pictures and upload --start  |")
@@ -66,35 +67,34 @@ func main()  {
 	}
 }
 
-
-func serialandCapPost()  {
+func serialandCapPost() {
 	var wg sync.WaitGroup
 	serialObservers := []serialHandler.SerialObserver{Observer.ObjectObserver, &Observer.Door}
 	wg.Add(1)
-	go serialHandler.SerialPortListen(config.Config.SerialPort,config.Config.Baudrate,serialObservers)
-	for{
-		responseStr:=<-Observer.ObjectOutChanel;
+	go serialHandler.SerialPortListen(config.Config.SerialPort, config.Config.Baudrate, serialObservers)
+	for {
+		responseStr := <-Observer.ObjectOutChanel
 		log.Print(responseStr)
 	}
 	wg.Wait()
 }
 
-func testserial()  {
-	c:=&serial.Config{
-		Name:config.Config.SerialPort,
-		Baud:config.Config.Baudrate,
+func testserial() {
+	c := &serial.Config{
+		Name: config.Config.SerialPort,
+		Baud: config.Config.Baudrate,
 	}
-	s,err:=serial.OpenPort(c)
-	if err!=nil {
+	s, err := serial.OpenPort(c)
+	if err != nil {
 		log.Fatal(err)
 	}
-	buf:=make([]byte,128)
+	buf := make([]byte, 128)
 	for {
-		n,err:=s.Read(buf)
-		if err!=nil{
+		n, err := s.Read(buf)
+		if err != nil {
 			log.Fatal(err)
 		}
-		str :=string(buf[:n])
+		str := string(buf[:n])
 		log.Print(str)
 		//log.Printf("%q", buf[:n])
 	}
@@ -123,8 +123,7 @@ func testGPIO() {
 	}
 }
 
-func getTimestr() string  {
-	timeStr:=time.Now().Format("2006-01-02,15:04:05")  //当前时间的字符串，2006-01-02 15:04:05(06年1月2号下午3点4分5秒，06 12345 不重复)，固定写法
+func getTimestr() string {
+	timeStr := time.Now().Format("2006-01-02,15:04:05") //当前时间的字符串，2006-01-02 15:04:05(06年1月2号下午3点4分5秒，06 12345 不重复)，固定写法
 	return timeStr
 }
-

@@ -23,6 +23,7 @@ type conf struct {
 	SerialPort  string      `yaml:"port"`
 	Baudrate    int         `yaml:"baudrate"`
 	DetectUrl   string      `yaml:"detecturl"`
+	Pi2Url      string      `yaml:"pi2url"`
 	CapConfigs  []capConfig `yaml:"caps"`
 	MachineId   string      `yaml:"machineid"`
 	Password    string      `yaml:"password"`
