@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 	"os"
 	"pi_go/Observer"
 	"pi_go/config"
@@ -10,7 +12,6 @@ import (
 	"pi_go/serialHandler"
 	"sync"
 	"time"
-
 	"github.com/stianeikeland/go-rpio"
 	"github.com/tarm/serial"
 )
@@ -42,6 +43,7 @@ func main() {
 		fmt.Println("|   3. Test serial                                    |")
 		fmt.Println("|   4. Open the door                                  |")
 		fmt.Println("|   5. test gpio                                      |")
+		fmt.Println("|   6. Start                                          |")
 		fmt.Println("|   0. Exit                                           |")
 		fmt.Println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 		fmt.Scanln(&order)
@@ -59,12 +61,33 @@ func main() {
 			Observer.DoorOpenedCallBack()
 		case 5:
 			testGPIO()
+		case 6:
+			start()
 		case 0:
 			os.Exit(0)
 		default:
 			fmt.Println("Input error!!! Please input again")
 		}
 	}
+}
+
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func start() {
+	r := gin.Default()
+	r.POST("/openDoor", func(c *gin.Context) {
+		data := User{}
+		c.BindJSON(&data)
+		log.Printf("%v", &data)
+		c.JSON(http.StatusOK, gin.H{
+			"username": data.Username,
+			"password": data.Password,
+		})
+	})
+	r.Run(":8000") // listen and serve on 0.0.0.0:8080
 }
 
 func serialandCapPost() {
