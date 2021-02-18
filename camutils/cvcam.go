@@ -29,6 +29,7 @@ func InitAndStartCap() {
 		}
 		go videoHandler.StartCap()
 		// ToDo 加入VideoHandler 前， 存储的 img 不能为空图像
+		fmt.Println("add \t", i, "\t cap")
 		VideoHandlers = append(VideoHandlers, videoHandler)
 	}
 
@@ -60,18 +61,24 @@ func (cap *VideoCap) GetJpegImageBytes() (buf []byte, err error) {
 }
 
 func (cap *VideoCap) StartCap() {
-	cam_handler, err := gocv.OpenVideoCapture(cap.videoId)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer cam_handler.Close()
+	// camHandler, err := gocv.OpenVideoCapture(cap.videoId)
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+	// defer camHandler.Close()
 	fmt.Println("videoId:\t", cap.videoId)
-	cam_handler.Set(gocv.VideoCaptureFrameHeight, 1080)
-	cam_handler.Set(gocv.VideoCaptureFrameWidth, 1920)
+	// fmt.Println("videoId:\t", cap.videoId, "\t", camHandler.Get(gocv.VideoCaptureFrameHeight))
+	// fmt.Println("videoId:\t", cap.videoId, "\t", camHandler.Get(gocv.VideoCaptureFrameWidth))
 	for {
-		cap.mutex.Lock()
-		cam_handler.Read(&cap.img)
-		cap.mutex.Unlock()
+		camHandler, err := gocv.OpenVideoCapture(cap.videoId)
+		if err != nil {
+			panic(err.Error())
+		}
+		camHandler.Set(gocv.VideoCaptureFrameHeight, 1080)
+		camHandler.Set(gocv.VideoCaptureFrameWidth, 1920)
+		fmt.Println("read picture:\t", cap.videoId)
+		camHandler.Read(&cap.img)
+		camHandler.Close()
 	}
 }
 
