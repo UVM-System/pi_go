@@ -82,6 +82,8 @@ func start() {
 		data := User{}
 		c.BindJSON(&data)
 		log.Printf("%v", &data)
+		gogpio.OpenDoor(3)
+		Observer.DoorOpenedCallBack()
 		c.JSON(http.StatusOK, gin.H{
 			"username": data.Username,
 			"password": data.Password,

@@ -61,24 +61,21 @@ func (cap *VideoCap) GetJpegImageBytes() (buf []byte, err error) {
 }
 
 func (cap *VideoCap) StartCap() {
-	// camHandler, err := gocv.OpenVideoCapture(cap.videoId)
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-	// defer camHandler.Close()
+	camHandler, err := gocv.OpenVideoCapture(cap.videoId)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer camHandler.Close()
 	fmt.Println("videoId:\t", cap.videoId)
+	camHandler.Set(gocv.VideoCaptureFrameHeight, 1080)
+	camHandler.Set(gocv.VideoCaptureFrameWidth, 1920)
 	// fmt.Println("videoId:\t", cap.videoId, "\t", camHandler.Get(gocv.VideoCaptureFrameHeight))
 	// fmt.Println("videoId:\t", cap.videoId, "\t", camHandler.Get(gocv.VideoCaptureFrameWidth))
 	for {
-		camHandler, err := gocv.OpenVideoCapture(cap.videoId)
-		if err != nil {
-			panic(err.Error())
-		}
-		camHandler.Set(gocv.VideoCaptureFrameHeight, 1080)
-		camHandler.Set(gocv.VideoCaptureFrameWidth, 1920)
+		cap.mutex.Lock()
 		fmt.Println("read picture:\t", cap.videoId)
 		camHandler.Read(&cap.img)
-		camHandler.Close()
+		cap.mutex.Unlock()
 	}
 }
 
